@@ -131,6 +131,7 @@
 
 <script>
 const SOSAC = 'https://tv.sosac.tv/cs/';
+const DEFAULT_API = 'https://lecharchiv-api.virivkyonlinecz.workers.dev';
 const els = {
   grid: document.getElementById('grid'), empty: document.getElementById('empty'),
   apiBase: document.getElementById('apiBase'), apiBase2: document.getElementById('apiBase2'),
@@ -145,7 +146,7 @@ function saveLocal(){
   localStorage.setItem('lech_pass', document.getElementById('password').value);
 }
 function loadLocal(){
-  const api=localStorage.getItem('lech_api_base')||''; els.apiBase.value=api; els.apiBase2.value=api;
+  const api=localStorage.getItem('lech_api_base')||DEFAULT_API; els.apiBase.value=api; els.apiBase2.value=api;
   document.getElementById('username').value=localStorage.getItem('lech_user')||'';
   document.getElementById('password').value=localStorage.getItem('lech_pass')||'';
 }
@@ -197,7 +198,7 @@ async function openDetail(it){
   detailDialog.showModal();
   if(it.url){
     try{
-      const API_URL = "https://lecharchiv-api.virivkyonlinecz.workers.dev";
+      const data=await api('/api/detail?url='+encodeURIComponent(it.url));
       if(data.description) detailDesc.textContent=data.description;
       if(data.playUrl) playBtn.onclick=()=>window.open(data.playUrl,'_blank');
     }catch(e){}
