@@ -197,7 +197,7 @@ async function openDetail(it){
   detailDialog.showModal();
   if(it.url){
     try{
-      const data=await api('/api/detail?url='+encodeURIComponent(it.url));
+      const API_URL = "https://lecharchiv-api.virivkyonlinecz.workers.dev";
       if(data.description) detailDesc.textContent=data.description;
       if(data.playUrl) playBtn.onclick=()=>window.open(data.playUrl,'_blank');
     }catch(e){}
