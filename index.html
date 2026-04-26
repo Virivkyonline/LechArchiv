@@ -61,8 +61,8 @@ body.theme-blue{--a:#38bdf8;--b:#2563eb;--c:#1d4ed8}body.theme-gold{--a:#fbbf24;
 
 <script>
 // ===== TVOJE PRIHLASOVACIE ÚDAJE - VYPLŇ TU, MUSIA BYŤ V ÚVODZOVKÁCH =====
-const SOSAC_EMAIL = "SEM_DAJ_EMAIL";
-const SOSAC_PASSWORD = "SEM_DAJ_HESLO";
+const SOSAC_EMAIL = "";
+const SOSAC_PASSWORD = "";
 
 // ===== CLOUDFLARE WORKER =====
 const API_BASE = "https://lecharchiv-api.virivkyonlinecz.workers.dev";
@@ -75,7 +75,7 @@ function setTheme(theme){document.body.className="theme-"+theme;localStorage.set
 document.querySelectorAll(".dot").forEach(d=>d.onclick=()=>setTheme(d.dataset.theme));setTheme(localStorage.getItem("lechplay_theme")||"gold");
 
 async function api(path){
- const r=await fetch(API_BASE.replace(/\/$/,"")+path,{headers:{"accept":"application/json","x-sosac-email":SOSAC_EMAIL,"x-sosac-password":SOSAC_PASSWORD}});
+ const r=await fetch(API_BASE.replace(/\/$/,"")+path,{headers:{"accept":"application/json"}});
  if(!r.ok)throw new Error("API chyba "+r.status);
  return await r.json();
 }
