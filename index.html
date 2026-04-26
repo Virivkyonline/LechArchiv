@@ -1,217 +1,34 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="sk">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>LechArchiv</title>
-  <meta name="theme-color" content="#07111f" />
-  <style>
-    :root{
-      --bg:#050914;--panel:#0b1424;--panel2:#101c31;--text:#eef6ff;--muted:#8fa2bd;
-      --line:rgba(255,255,255,.09);--brand:#38bdf8;--brand2:#2563eb;--danger:#fb7185;
-      --shadow:0 24px 70px rgba(0,0,0,.42);--radius:24px
-    }
-    *{box-sizing:border-box} html,body{height:100%}
-    body{margin:0;background:
-      radial-gradient(1000px 500px at 15% -10%,rgba(56,189,248,.28),transparent),
-      radial-gradient(900px 500px at 100% 0,rgba(37,99,235,.18),transparent),var(--bg);
-      color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    .top{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:14px;padding:18px clamp(16px,4vw,48px);
-      background:rgba(5,9,20,.82);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
-    .logo{width:52px;height:52px;border-radius:18px;background:linear-gradient(135deg,var(--brand),var(--brand2));
-      display:grid;place-items:center;font-size:30px;font-weight:900;box-shadow:var(--shadow);cursor:pointer;user-select:none}
-    .title h1{font-size:24px;line-height:1;margin:0}.title p{margin:5px 0 0;color:var(--muted);font-size:13px}
-    .spacer{flex:1}.pill{border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text);
-      padding:12px 14px;border-radius:16px;font-weight:700;cursor:pointer}
-    .wrap{max-width:1260px;margin:0 auto;padding:26px clamp(16px,4vw,48px) 60px}
-    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:stretch}
-    .card{background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.035));border:1px solid var(--line);
-      border-radius:var(--radius);box-shadow:var(--shadow)}
-    .intro{padding:34px}.intro h2{font-size:clamp(34px,6vw,70px);line-height:.98;margin:0 0 18px}
-    .intro p{color:var(--muted);font-size:18px;line-height:1.55;max-width:720px}
-    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
-    .btn{border:0;background:linear-gradient(135deg,var(--brand),var(--brand2));color:white;border-radius:18px;
-      padding:15px 20px;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 14px 35px rgba(37,99,235,.28)}
-    .btn.secondary{background:rgba(255,255,255,.06);border:1px solid var(--line);box-shadow:none}
-    .settings{padding:26px}.settings label{display:block;color:var(--muted);font-size:13px;margin:15px 0 8px}
-    input,select{width:100%;border:1px solid var(--line);background:#071120;color:var(--text);padding:14px 15px;border-radius:16px;outline:none}
-    input:focus{border-color:rgba(56,189,248,.7)}
-    .bar{display:flex;gap:12px;margin:22px 0;align-items:center}.bar input{flex:1}.tabs{display:flex;gap:10px;overflow:auto;padding:4px 0 18px}
-    .tab{white-space:nowrap;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--muted);padding:12px 16px;border-radius:999px;cursor:pointer;font-weight:800}
-    .tab.active{color:white;background:linear-gradient(135deg,rgba(56,189,248,.3),rgba(37,99,235,.25));border-color:rgba(56,189,248,.5)}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:18px}
-    .item{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:20px;overflow:hidden;cursor:pointer;transition:.18s transform,.18s border}
-    .item:hover,.item:focus{transform:translateY(-4px);border-color:rgba(56,189,248,.55)}
-    .poster{aspect-ratio:2/3;background:linear-gradient(135deg,#14233a,#0b1220);display:grid;place-items:center;overflow:hidden}
-    .poster img{width:100%;height:100%;object-fit:cover}.poster span{font-size:44px;opacity:.35}
-    .meta{padding:13px}.meta h3{font-size:15px;margin:0 0 8px;line-height:1.25}.meta p{margin:0;color:var(--muted);font-size:12px;line-height:1.35}
-    .empty{padding:36px;text-align:center;color:var(--muted)}
-    dialog{border:1px solid var(--line);border-radius:24px;background:#071120;color:var(--text);max-width:560px;width:calc(100% - 28px);box-shadow:var(--shadow)}
-    dialog::backdrop{background:rgba(0,0,0,.7)} .modal-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
-    .x{background:rgba(255,255,255,.08);border:1px solid var(--line);color:white;border-radius:12px;padding:8px 11px;cursor:pointer}
-    .detail{display:grid;grid-template-columns:160px 1fr;gap:18px}.detail img{width:100%;border-radius:18px}
-    .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#0b1424;border:1px solid var(--line);padding:12px 16px;border-radius:999px;display:none;z-index:20}
-    @media(max-width:760px){.hero{grid-template-columns:1fr}.detail{grid-template-columns:1fr}.top{padding:12px 14px}.logo{width:46px;height:46px}.pill{padding:10px 12px}.intro{padding:24px}.settings{padding:20px}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lech App</title>
+<style>
+body{background:#0b1424;color:white;font-family:sans-serif;text-align:center}
+button{padding:15px 20px;margin:10px;border-radius:12px;border:none;font-size:18px;cursor:pointer}
+</style>
 </head>
 <body>
-<header class="top">
-  <div class="logo" id="logo" title="LechArchiv">L</div>
-  <div class="title"><h1>LechArchiv</h1><p>moderný klient pre tv.sosac.tv</p></div>
-  <div class="spacer"></div>
-  <button class="pill" id="refreshBtn">↻</button>
-  <button class="pill" id="settingsBtn">⚙</button>
-</header>
 
-<main class="wrap">
-  <section class="hero">
-    <div class="card intro">
-      <h2>Vlastné UI pre archív.</h2>
-      <p>Táto verzia už neukazuje web v iframe. Načíta dáta cez Cloudflare Worker a zobrazí ich v tvojej modernej knižnici.</p>
-      <div class="actions">
-        <button class="btn" id="loadBtn">Načítať obsah</button>
-        <button class="btn secondary" id="openWebBtn">Otvoriť originál</button>
-      </div>
-    </div>
-    <div class="card settings">
-      <b>Stav pripojenia</b>
-      <label>Cloudflare Worker API URL</label>
-      <input id="apiBase" placeholder="https://tvoj-worker.tvoj-subdomain.workers.dev" />
-      <label>Poznámka</label>
-      <p style="color:var(--muted);line-height:1.5;margin:0">Najprv nasaď <b>cloudflare-worker.js</b>. Potom sem vlož Worker URL. Údaje sa ukladajú lokálne v prehliadači.</p>
-    </div>
-  </section>
+<h1>Vyber sekciu</h1>
 
-  <div class="bar">
-    <input id="q" placeholder="Hľadať film alebo seriál..." />
-    <button class="btn" id="searchBtn">Hľadať</button>
-  </div>
+<button onclick="load('movies')">🎬 Filmy</button>
+<button onclick="load('series')">📺 Seriály</button>
 
-  <div class="tabs">
-    <button class="tab active" data-type="home">Domov</button>
-    <button class="tab" data-type="movies">Filmy</button>
-    <button class="tab" data-type="series">Seriály</button>
-    <button class="tab" data-type="popular">Najobľúbenejšie</button>
-    <button class="tab" data-type="new">Novinky</button>
-  </div>
-
-  <section class="grid" id="grid"></section>
-  <div class="empty" id="empty">Zadaj Worker URL a klikni „Načítať obsah“.</div>
-</main>
-
-<dialog id="settingsDialog">
-  <div class="modal-head"><h2>Nastavenia</h2><button class="x" onclick="settingsDialog.close()">✕</button></div>
-  <label>Cloudflare Worker API URL</label>
-  <input id="apiBase2" />
-  <label>Užívateľ Sosáč (voliteľné pre budúcu login verziu)</label>
-  <input id="username" autocomplete="username" />
-  <label>Heslo (ukladá sa iba lokálne v tomto zariadení)</label>
-  <input id="password" type="password" autocomplete="current-password" />
-  <div class="actions">
-    <button class="btn" id="saveSettings">Uložiť</button>
-    <button class="btn secondary" id="clearSettings">Vymazať</button>
-  </div>
-</dialog>
-
-<dialog id="detailDialog">
-  <div class="modal-head"><h2 id="detailTitle">Detail</h2><button class="x" onclick="detailDialog.close()">✕</button></div>
-  <div class="detail">
-    <div id="detailPoster"></div>
-    <div>
-      <p id="detailDesc" style="color:var(--muted);line-height:1.55"></p>
-      <div class="actions">
-        <button class="btn" id="playBtn">Otvoriť / prehrať</button>
-        <button class="btn secondary" id="detailSourceBtn">Originál stránka</button>
-      </div>
-    </div>
-  </div>
-</dialog>
-
-<div class="toast" id="toast"></div>
+<div id="out"></div>
 
 <script>
-const SOSAC = 'https://tv.sosac.tv/cs/';
-const DEFAULT_API = 'https://lecharchiv-api.virivkyonlinecz.workers.dev';
-const els = {
-  grid: document.getElementById('grid'), empty: document.getElementById('empty'),
-  apiBase: document.getElementById('apiBase'), apiBase2: document.getElementById('apiBase2'),
-  q: document.getElementById('q'), toast: document.getElementById('toast')
-};
-let state = { type:'home', items:[], selected:null, logoClicks:0, logoTimer:null };
+const API = "YOUR_WORKER_URL";
 
-function toast(msg){ els.toast.textContent=msg; els.toast.style.display='block'; setTimeout(()=>els.toast.style.display='none',2400); }
-function saveLocal(){
-  localStorage.setItem('lech_api_base', els.apiBase.value.trim());
-  localStorage.setItem('lech_user', document.getElementById('username').value.trim());
-  localStorage.setItem('lech_pass', document.getElementById('password').value);
+async function load(type){
+  const res = await fetch(API + "/api/list?type=" + type);
+  const data = await res.json();
+  document.getElementById('out').innerHTML =
+    data.items.map(x => "<p>"+x.title+"</p>").join("");
 }
-function loadLocal(){
-  const api=localStorage.getItem('lech_api_base')||DEFAULT_API; els.apiBase.value=api; els.apiBase2.value=api;
-  document.getElementById('username').value=localStorage.getItem('lech_user')||'';
-  document.getElementById('password').value=localStorage.getItem('lech_pass')||'';
-}
-function apiUrl(path){
-  const base = els.apiBase.value.trim().replace(/\/$/,'');
-  if(!base) throw new Error('Chýba Cloudflare Worker URL.');
-  return base + path;
-}
-async function api(path){
-  const r = await fetch(apiUrl(path), {headers:{'accept':'application/json'}});
-  if(!r.ok) throw new Error('API chyba: '+r.status);
-  return await r.json();
-}
-function normalizeItems(data){
-  if(Array.isArray(data)) return data;
-  return data.items || data.results || [];
-}
-function render(items){
-  state.items = items; els.grid.innerHTML='';
-  if(!items.length){ els.empty.style.display='block'; els.empty.textContent='Nič sa nenašlo.'; return; }
-  els.empty.style.display='none';
-  for(const it of items){
-    const el=document.createElement('article'); el.className='item'; el.tabIndex=0;
-    const img=it.image||it.poster||'';
-    el.innerHTML = `<div class="poster">${img?`<img loading="lazy" src="${escapeHtml(img)}">`:'<span>▶</span>'}</div>
-      <div class="meta"><h3>${escapeHtml(it.title||'Bez názvu')}</h3><p>${escapeHtml(it.subtitle||it.year||it.category||'')}</p></div>`;
-    el.onclick=()=>openDetail(it); el.onkeydown=e=>{if(e.key==='Enter')openDetail(it)};
-    els.grid.appendChild(el);
-  }
-}
-function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-async function loadContent(){
-  try{
-    els.empty.style.display='block'; els.empty.textContent='Načítavam...'; els.grid.innerHTML='';
-    localStorage.setItem('lech_api_base', els.apiBase.value.trim());
-    let path = '/api/list?type='+encodeURIComponent(state.type);
-    const q=els.q.value.trim();
-    if(q) path='/api/search?q='+encodeURIComponent(q);
-    const data=await api(path); render(normalizeItems(data)); toast('Obsah načítaný');
-  }catch(e){ els.empty.style.display='block'; els.empty.textContent=e.message; toast(e.message); }
-}
-async function openDetail(it){
-  state.selected=it;
-  detailTitle.textContent=it.title||'Detail';
-  detailDesc.textContent=it.description||it.subtitle||'Detail sa načíta z originálnej stránky alebo cez Worker endpoint /api/detail.';
-  detailPoster.innerHTML=(it.image||it.poster)?`<img src="${escapeHtml(it.image||it.poster)}">`:'';
-  playBtn.onclick=()=>{ window.open(it.playUrl || it.url || SOSAC, '_blank'); };
-  detailSourceBtn.onclick=()=>{ window.open(it.url || SOSAC, '_blank'); };
-  detailDialog.showModal();
-  if(it.url){
-    try{
-      const data=await api('/api/detail?url='+encodeURIComponent(it.url));
-      if(data.description) detailDesc.textContent=data.description;
-      if(data.playUrl) playBtn.onclick=()=>window.open(data.playUrl,'_blank');
-    }catch(e){}
-  }
-}
-document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); t.classList.add('active'); state.type=t.dataset.type; loadContent();});
-loadBtn.onclick=loadContent; searchBtn.onclick=loadContent; refreshBtn.onclick=loadContent; openWebBtn.onclick=()=>window.open(SOSAC,'_blank');
-settingsBtn.onclick=()=>{els.apiBase2.value=els.apiBase.value; settingsDialog.showModal();};
-saveSettings.onclick=()=>{els.apiBase.value=els.apiBase2.value.trim(); saveLocal(); settingsDialog.close(); toast('Uložené');};
-clearSettings.onclick=()=>{localStorage.clear(); loadLocal(); toast('Vymazané');};
-logo.onclick=()=>{ clearTimeout(state.logoTimer); state.logoClicks++; state.logoTimer=setTimeout(()=>state.logoClicks=0,1200); if(state.logoClicks>=5){state.logoClicks=0; settingsBtn.click();}};
-q.addEventListener('keydown',e=>{if(e.key==='Enter')loadContent()});
-loadLocal();
 </script>
+
 </body>
 </html>
