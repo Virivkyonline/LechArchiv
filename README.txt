@@ -1,8 +1,14 @@
-LechPlay verzia s prihlasovacími údajmi v HTML.
+LechPlay - prehrávač cez Worker
 
-V index.html hore v JS časti nájdeš:
+Zmeny:
+- klik na film/seriál už neotvára externé okno
+- index.html otvorí fullscreen prehrávač v aplikácii
+- worker.js má endpoint /api/play
+- worker sa pokúsi prihlásiť cez údaje z index.html a vytiahnuť iframe/video
+- ak nenájde priamy iframe/video, zobrazí stránku cez /proxy v iframe
 
-const SOSAC_EMAIL = "SEM_DAJ_EMAIL";
-const SOSAC_PASSWORD = "SEM_DAJ_HESLO";
+V index.html vyplň:
+const SOSAC_EMAIL = "tvoj_login";
+const SOSAC_PASSWORD = "tvoje_heslo";
 
-Tam si dopíš svoje údaje.
+Potom nahraj worker.js na Cloudflare Worker a index.html na GitHub Pages.
