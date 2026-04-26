@@ -2,114 +2,215 @@
 <html lang="sk">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#050816" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>LechArchiv</title>
+  <meta name="theme-color" content="#07111f" />
   <style>
     :root{
-      --bg:#050816;--card:#0b1224cc;--card2:#111a31;--text:#eef6ff;--muted:#91a2bd;--blue:#39b7ff;--blue2:#2368ff;--line:#24304a;--danger:#ff5b6b;--ok:#42d392;
+      --bg:#050914;--panel:#0b1424;--panel2:#101c31;--text:#eef6ff;--muted:#8fa2bd;
+      --line:rgba(255,255,255,.09);--brand:#38bdf8;--brand2:#2563eb;--danger:#fb7185;
+      --shadow:0 24px 70px rgba(0,0,0,.42);--radius:24px
     }
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden}
-    body:before{content:"";position:fixed;inset:-30%;background:radial-gradient(circle at 25% 12%,#1b82ff55,transparent 28%),radial-gradient(circle at 82% 22%,#00e5ff33,transparent 25%),radial-gradient(circle at 50% 100%,#173064,transparent 35%);filter:blur(4px);z-index:0}
-    .app{position:relative;z-index:1;height:100%;display:flex;flex-direction:column}
-    header{height:78px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,#071126ee,#071126bb);border-bottom:1px solid #1f2d47;backdrop-filter:blur(18px)}
-    .brand{display:flex;align-items:center;gap:14px;min-width:0}
-    .logo{width:54px;height:54px;border-radius:18px;background:linear-gradient(135deg,#56d6ff,#2467ff);display:grid;place-items:center;box-shadow:0 12px 35px #258cff44;border:1px solid #7edfff66;cursor:pointer;user-select:none;font-size:30px;font-weight:900;color:white}
-    .title{line-height:1.05;min-width:0}.title b{display:block;font-size:24px;letter-spacing:-.5px;white-space:nowrap}.title span{display:block;margin-top:5px;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .actions{display:flex;gap:10px}.iconbtn{border:1px solid #2b3b5c;background:#121b30d9;color:var(--text);border-radius:16px;height:48px;min-width:48px;padding:0 15px;font-size:18px;font-weight:800;cursor:pointer;box-shadow:0 10px 30px #0005}.iconbtn:hover,.iconbtn:focus{outline:2px solid #4fc3ff66}
-    main{flex:1;min-height:0;position:relative}
-    .home{height:100%;overflow:auto;padding:42px 18px 80px;display:flex;justify-content:center}.wrap{width:min(920px,100%)}
-    .hero{border:1px solid #26344f;background:linear-gradient(180deg,#101a32dd,#081022dd);border-radius:34px;padding:38px;box-shadow:0 30px 80px #0008}.hero h1{margin:0;font-size:clamp(42px,8vw,76px);letter-spacing:-2.5px;line-height:.95}.hero h1 span{color:#9be5ff}.hero p{font-size:clamp(18px,3.5vw,26px);line-height:1.45;color:#a8b5ca;max-width:680px;margin:22px 0 30px}.buttons{display:flex;gap:14px;flex-wrap:wrap}.btn{border:0;border-radius:20px;padding:17px 24px;font-size:18px;font-weight:900;color:white;background:linear-gradient(135deg,var(--blue),var(--blue2));box-shadow:0 16px 44px #257cff55;cursor:pointer}.btn.secondary{background:#172137;border:1px solid #324260;box-shadow:none}.btn:hover,.btn:focus{outline:3px solid #53c8ff55}
-    .info{margin-top:22px;border:1px solid #22314f;background:#081022bb;border-radius:28px;padding:26px;color:#aebbd0;font-size:18px;line-height:1.55}.info b{color:#eff7ff}
-    .viewer{display:none;position:absolute;inset:0;background:#000}.viewer.active{display:block}.webbar{height:58px;display:flex;align-items:center;gap:8px;padding:8px 10px;background:#071126;border-bottom:1px solid #1b2942}.webbar .url{flex:1;min-width:0;padding:11px 13px;border-radius:14px;background:#0d172b;color:#9fb0c7;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:1px solid #253552}.webframe{width:100%;height:calc(100% - 58px);border:0;background:#fff}.fullscreen .webbar{display:none}.fullscreen .webframe{height:100%}
-    dialog{border:1px solid #314466;border-radius:28px;background:#091225;color:var(--text);width:min(480px,calc(100% - 28px));padding:0;box-shadow:0 30px 100px #000b}dialog::backdrop{background:#0009;backdrop-filter:blur(5px)}.modal{padding:25px}.modal h2{margin:0 0 8px;font-size:28px}.modal p{margin:0 0 20px;color:var(--muted);line-height:1.45}.field{margin:14px 0}.field label{display:block;color:#b9c5d6;margin-bottom:7px;font-weight:800}.field input{width:100%;font-size:18px;color:var(--text);background:#0f1a31;border:1px solid #2d3e60;border-radius:16px;padding:14px 15px;outline:none}.field input:focus{border-color:#4fc3ff;box-shadow:0 0 0 3px #4fc3ff22}.modalActions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}.small{font-size:13px;color:#7f91ad}.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(80px);background:#101a31;border:1px solid #30415f;color:var(--text);border-radius:999px;padding:12px 18px;z-index:20;box-shadow:0 20px 50px #0008;opacity:0;transition:.25s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-    @media(max-width:520px){header{height:70px}.logo{width:48px;height:48px;border-radius:16px}.title b{font-size:20px}.home{padding-top:28px}.hero{padding:28px 24px;border-radius:28px}.btn{width:100%}.webbar{height:54px}.webframe{height:calc(100% - 54px)}}
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;background:
+      radial-gradient(1000px 500px at 15% -10%,rgba(56,189,248,.28),transparent),
+      radial-gradient(900px 500px at 100% 0,rgba(37,99,235,.18),transparent),var(--bg);
+      color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    .top{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:14px;padding:18px clamp(16px,4vw,48px);
+      background:rgba(5,9,20,.82);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+    .logo{width:52px;height:52px;border-radius:18px;background:linear-gradient(135deg,var(--brand),var(--brand2));
+      display:grid;place-items:center;font-size:30px;font-weight:900;box-shadow:var(--shadow);cursor:pointer;user-select:none}
+    .title h1{font-size:24px;line-height:1;margin:0}.title p{margin:5px 0 0;color:var(--muted);font-size:13px}
+    .spacer{flex:1}.pill{border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text);
+      padding:12px 14px;border-radius:16px;font-weight:700;cursor:pointer}
+    .wrap{max-width:1260px;margin:0 auto;padding:26px clamp(16px,4vw,48px) 60px}
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:stretch}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.035));border:1px solid var(--line);
+      border-radius:var(--radius);box-shadow:var(--shadow)}
+    .intro{padding:34px}.intro h2{font-size:clamp(34px,6vw,70px);line-height:.98;margin:0 0 18px}
+    .intro p{color:var(--muted);font-size:18px;line-height:1.55;max-width:720px}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+    .btn{border:0;background:linear-gradient(135deg,var(--brand),var(--brand2));color:white;border-radius:18px;
+      padding:15px 20px;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 14px 35px rgba(37,99,235,.28)}
+    .btn.secondary{background:rgba(255,255,255,.06);border:1px solid var(--line);box-shadow:none}
+    .settings{padding:26px}.settings label{display:block;color:var(--muted);font-size:13px;margin:15px 0 8px}
+    input,select{width:100%;border:1px solid var(--line);background:#071120;color:var(--text);padding:14px 15px;border-radius:16px;outline:none}
+    input:focus{border-color:rgba(56,189,248,.7)}
+    .bar{display:flex;gap:12px;margin:22px 0;align-items:center}.bar input{flex:1}.tabs{display:flex;gap:10px;overflow:auto;padding:4px 0 18px}
+    .tab{white-space:nowrap;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--muted);padding:12px 16px;border-radius:999px;cursor:pointer;font-weight:800}
+    .tab.active{color:white;background:linear-gradient(135deg,rgba(56,189,248,.3),rgba(37,99,235,.25));border-color:rgba(56,189,248,.5)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:18px}
+    .item{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:20px;overflow:hidden;cursor:pointer;transition:.18s transform,.18s border}
+    .item:hover,.item:focus{transform:translateY(-4px);border-color:rgba(56,189,248,.55)}
+    .poster{aspect-ratio:2/3;background:linear-gradient(135deg,#14233a,#0b1220);display:grid;place-items:center;overflow:hidden}
+    .poster img{width:100%;height:100%;object-fit:cover}.poster span{font-size:44px;opacity:.35}
+    .meta{padding:13px}.meta h3{font-size:15px;margin:0 0 8px;line-height:1.25}.meta p{margin:0;color:var(--muted);font-size:12px;line-height:1.35}
+    .empty{padding:36px;text-align:center;color:var(--muted)}
+    dialog{border:1px solid var(--line);border-radius:24px;background:#071120;color:var(--text);max-width:560px;width:calc(100% - 28px);box-shadow:var(--shadow)}
+    dialog::backdrop{background:rgba(0,0,0,.7)} .modal-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .x{background:rgba(255,255,255,.08);border:1px solid var(--line);color:white;border-radius:12px;padding:8px 11px;cursor:pointer}
+    .detail{display:grid;grid-template-columns:160px 1fr;gap:18px}.detail img{width:100%;border-radius:18px}
+    .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#0b1424;border:1px solid var(--line);padding:12px 16px;border-radius:999px;display:none;z-index:20}
+    @media(max-width:760px){.hero{grid-template-columns:1fr}.detail{grid-template-columns:1fr}.top{padding:12px 14px}.logo{width:46px;height:46px}.pill{padding:10px 12px}.intro{padding:24px}.settings{padding:20px}}
   </style>
 </head>
 <body>
-  <div class="app">
-    <header>
-      <div class="brand">
-        <div id="logo" class="logo" title="LechArchiv">L</div>
-        <div class="title"><b>LechArchiv</b><span>Sosáč moderný klient</span></div>
-      </div>
+<header class="top">
+  <div class="logo" id="logo" title="LechArchiv">L</div>
+  <div class="title"><h1>LechArchiv</h1><p>moderný klient pre tv.sosac.tv</p></div>
+  <div class="spacer"></div>
+  <button class="pill" id="refreshBtn">↻</button>
+  <button class="pill" id="settingsBtn">⚙</button>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="card intro">
+      <h2>Vlastné UI pre archív.</h2>
+      <p>Táto verzia už neukazuje web v iframe. Načíta dáta cez Cloudflare Worker a zobrazí ich v tvojej modernej knižnici.</p>
       <div class="actions">
-        <button id="homeBtn" class="iconbtn" title="Domov">⌂</button>
-        <button id="refreshBtn" class="iconbtn" title="Obnoviť">↻</button>
+        <button class="btn" id="loadBtn">Načítať obsah</button>
+        <button class="btn secondary" id="openWebBtn">Otvoriť originál</button>
       </div>
-    </header>
-    <main>
-      <section id="home" class="home">
-        <div class="wrap">
-          <div class="hero">
-            <h1>Lech<span>Archiv</span></h1>
-            <p>Moderné čisté rozhranie pre otvorenie tvojho zaplateného účtu na tv.sosac.tv. Prihlásenie si stránka zapamätá cez cookies.</p>
-            <div class="buttons">
-              <button id="openBtn" class="btn">Otvoriť Sosáč</button>
-              <button id="loginBtn" class="btn secondary">Prihlásenie</button>
-            </div>
-          </div>
-          <div class="info">
-            <b>Ovládanie:</b> otvor Sosáč, prihlás sa raz a nechaj zapnuté zapamätanie prihlásenia. Logo vľavo hore slúži aj ako skratka k prihlasovaciemu menu po piatich klikoch.
-          </div>
-        </div>
-      </section>
-      <section id="viewer" class="viewer">
-        <div id="webbar" class="webbar">
-          <button id="backBtn" class="iconbtn" title="Späť">‹</button>
-          <button id="forwardBtn" class="iconbtn" title="Dopredu">›</button>
-          <div id="urlText" class="url">https://tv.sosac.tv/cs/</div>
-          <button id="fullBtn" class="iconbtn" title="Fullscreen">⛶</button>
-        </div>
-        <iframe id="webframe" class="webframe" src="about:blank" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
-      </section>
-    </main>
+    </div>
+    <div class="card settings">
+      <b>Stav pripojenia</b>
+      <label>Cloudflare Worker API URL</label>
+      <input id="apiBase" placeholder="https://tvoj-worker.tvoj-subdomain.workers.dev" />
+      <label>Poznámka</label>
+      <p style="color:var(--muted);line-height:1.5;margin:0">Najprv nasaď <b>cloudflare-worker.js</b>. Potom sem vlož Worker URL. Údaje sa ukladajú lokálne v prehliadači.</p>
+    </div>
+  </section>
+
+  <div class="bar">
+    <input id="q" placeholder="Hľadať film alebo seriál..." />
+    <button class="btn" id="searchBtn">Hľadať</button>
   </div>
 
-  <dialog id="loginDialog">
-    <form method="dialog" class="modal" id="loginForm">
-      <h2>Prihlásenie</h2>
-      <p>Údaje sa ukladajú iba lokálne v tomto zariadení. Web Sosáč sa otvorí v okne a cookies ostanú zapamätané.</p>
-      <div class="field"><label for="username">Meno</label><input id="username" autocomplete="username" placeholder="Používateľské meno" /></div>
-      <div class="field"><label for="password">Heslo</label><input id="password" type="password" autocomplete="current-password" placeholder="Heslo" /></div>
-      <div class="small">Poznámka: čistý web cez GitHub nevie bezpečne automaticky odoslať login na cudziu stránku. V Capacitor APK potom vieme doplniť lepšiu prácu s WebView/cookies.</div>
-      <div class="modalActions">
-        <button type="button" class="btn secondary" id="clearBtn">Vymazať</button>
-        <button type="button" class="btn secondary" id="closeLoginBtn">Zavrieť</button>
-        <button class="btn" value="save">Uložiť</button>
-      </div>
-    </form>
-  </dialog>
-  <div id="toast" class="toast"></div>
+  <div class="tabs">
+    <button class="tab active" data-type="home">Domov</button>
+    <button class="tab" data-type="movies">Filmy</button>
+    <button class="tab" data-type="series">Seriály</button>
+    <button class="tab" data-type="popular">Najobľúbenejšie</button>
+    <button class="tab" data-type="new">Novinky</button>
+  </div>
 
-  <script>
-    const SOSAC_URL = 'https://tv.sosac.tv/cs/';
-    const LOGIN_URL = 'https://tv.sosac.tv/cs/login';
-    const $ = (id) => document.getElementById(id);
-    const home = $('home'), viewer = $('viewer'), frame = $('webframe'), urlText = $('urlText'), loginDialog = $('loginDialog');
-    let logoClicks = 0, logoTimer = null, historyStack = [], currentUrl = SOSAC_URL;
-    function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
-    function saveLogin(){localStorage.setItem('lech_username',$('username').value.trim());localStorage.setItem('lech_password',$('password').value);toast('Uložené');}
-    function loadLogin(){ $('username').value=localStorage.getItem('lech_username')||''; $('password').value=localStorage.getItem('lech_password')||''; }
-    function clearLogin(){localStorage.removeItem('lech_username');localStorage.removeItem('lech_password');$('username').value='';$('password').value='';toast('Vymazané');}
-    function openLogin(){loadLogin();loginDialog.showModal();setTimeout(()=>$('username').focus(),120)}
-    function openWeb(url=SOSAC_URL){currentUrl=url;urlText.textContent=url;home.style.display='none';viewer.classList.add('active');if(frame.src==='about:blank'||frame.src!==url){frame.src=url;}historyStack.push(url)}
-    function goHome(){viewer.classList.remove('active');home.style.display='flex';document.body.classList.remove('fullscreen')}
-    $('openBtn').onclick=()=>openWeb(SOSAC_URL);
-    $('loginBtn').onclick=()=>openLogin();
-    $('homeBtn').onclick=()=>goHome();
-    $('refreshBtn').onclick=()=>{ if(viewer.classList.contains('active')) frame.src = frame.src; else location.reload(); };
-    $('backBtn').onclick=()=>{ try{ frame.contentWindow.history.back(); }catch(e){ frame.src=SOSAC_URL; } };
-    $('forwardBtn').onclick=()=>{ try{ frame.contentWindow.history.forward(); }catch(e){} };
-    $('fullBtn').onclick=()=>document.body.classList.toggle('fullscreen');
-    $('closeLoginBtn').onclick=()=>loginDialog.close();
-    $('clearBtn').onclick=()=>clearLogin();
-    $('loginForm').addEventListener('submit', e=>{e.preventDefault();saveLogin();loginDialog.close();openWeb(LOGIN_URL);});
-    $('logo').onclick=()=>{logoClicks++;clearTimeout(logoTimer);logoTimer=setTimeout(()=>logoClicks=0,1200);if(logoClicks>=5){logoClicks=0;openLogin();}};
-    window.addEventListener('keydown', e=>{if(e.key==='Escape'&&viewer.classList.contains('active')) goHome(); if(e.key==='F11'){e.preventDefault();document.body.classList.toggle('fullscreen')}});
-    frame.addEventListener('load',()=>{try{urlText.textContent=frame.contentWindow.location.href}catch(e){urlText.textContent=currentUrl}});
-    loadLogin();
-  </script>
+  <section class="grid" id="grid"></section>
+  <div class="empty" id="empty">Zadaj Worker URL a klikni „Načítať obsah“.</div>
+</main>
+
+<dialog id="settingsDialog">
+  <div class="modal-head"><h2>Nastavenia</h2><button class="x" onclick="settingsDialog.close()">✕</button></div>
+  <label>Cloudflare Worker API URL</label>
+  <input id="apiBase2" />
+  <label>Užívateľ Sosáč (voliteľné pre budúcu login verziu)</label>
+  <input id="username" autocomplete="username" />
+  <label>Heslo (ukladá sa iba lokálne v tomto zariadení)</label>
+  <input id="password" type="password" autocomplete="current-password" />
+  <div class="actions">
+    <button class="btn" id="saveSettings">Uložiť</button>
+    <button class="btn secondary" id="clearSettings">Vymazať</button>
+  </div>
+</dialog>
+
+<dialog id="detailDialog">
+  <div class="modal-head"><h2 id="detailTitle">Detail</h2><button class="x" onclick="detailDialog.close()">✕</button></div>
+  <div class="detail">
+    <div id="detailPoster"></div>
+    <div>
+      <p id="detailDesc" style="color:var(--muted);line-height:1.55"></p>
+      <div class="actions">
+        <button class="btn" id="playBtn">Otvoriť / prehrať</button>
+        <button class="btn secondary" id="detailSourceBtn">Originál stránka</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SOSAC = 'https://tv.sosac.tv/cs/';
+const els = {
+  grid: document.getElementById('grid'), empty: document.getElementById('empty'),
+  apiBase: document.getElementById('apiBase'), apiBase2: document.getElementById('apiBase2'),
+  q: document.getElementById('q'), toast: document.getElementById('toast')
+};
+let state = { type:'home', items:[], selected:null, logoClicks:0, logoTimer:null };
+
+function toast(msg){ els.toast.textContent=msg; els.toast.style.display='block'; setTimeout(()=>els.toast.style.display='none',2400); }
+function saveLocal(){
+  localStorage.setItem('lech_api_base', els.apiBase.value.trim());
+  localStorage.setItem('lech_user', document.getElementById('username').value.trim());
+  localStorage.setItem('lech_pass', document.getElementById('password').value);
+}
+function loadLocal(){
+  const api=localStorage.getItem('lech_api_base')||''; els.apiBase.value=api; els.apiBase2.value=api;
+  document.getElementById('username').value=localStorage.getItem('lech_user')||'';
+  document.getElementById('password').value=localStorage.getItem('lech_pass')||'';
+}
+function apiUrl(path){
+  const base = els.apiBase.value.trim().replace(/\/$/,'');
+  if(!base) throw new Error('Chýba Cloudflare Worker URL.');
+  return base + path;
+}
+async function api(path){
+  const r = await fetch(apiUrl(path), {headers:{'accept':'application/json'}});
+  if(!r.ok) throw new Error('API chyba: '+r.status);
+  return await r.json();
+}
+function normalizeItems(data){
+  if(Array.isArray(data)) return data;
+  return data.items || data.results || [];
+}
+function render(items){
+  state.items = items; els.grid.innerHTML='';
+  if(!items.length){ els.empty.style.display='block'; els.empty.textContent='Nič sa nenašlo.'; return; }
+  els.empty.style.display='none';
+  for(const it of items){
+    const el=document.createElement('article'); el.className='item'; el.tabIndex=0;
+    const img=it.image||it.poster||'';
+    el.innerHTML = `<div class="poster">${img?`<img loading="lazy" src="${escapeHtml(img)}">`:'<span>▶</span>'}</div>
+      <div class="meta"><h3>${escapeHtml(it.title||'Bez názvu')}</h3><p>${escapeHtml(it.subtitle||it.year||it.category||'')}</p></div>`;
+    el.onclick=()=>openDetail(it); el.onkeydown=e=>{if(e.key==='Enter')openDetail(it)};
+    els.grid.appendChild(el);
+  }
+}
+function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+async function loadContent(){
+  try{
+    els.empty.style.display='block'; els.empty.textContent='Načítavam...'; els.grid.innerHTML='';
+    localStorage.setItem('lech_api_base', els.apiBase.value.trim());
+    let path = '/api/list?type='+encodeURIComponent(state.type);
+    const q=els.q.value.trim();
+    if(q) path='/api/search?q='+encodeURIComponent(q);
+    const data=await api(path); render(normalizeItems(data)); toast('Obsah načítaný');
+  }catch(e){ els.empty.style.display='block'; els.empty.textContent=e.message; toast(e.message); }
+}
+async function openDetail(it){
+  state.selected=it;
+  detailTitle.textContent=it.title||'Detail';
+  detailDesc.textContent=it.description||it.subtitle||'Detail sa načíta z originálnej stránky alebo cez Worker endpoint /api/detail.';
+  detailPoster.innerHTML=(it.image||it.poster)?`<img src="${escapeHtml(it.image||it.poster)}">`:'';
+  playBtn.onclick=()=>{ window.open(it.playUrl || it.url || SOSAC, '_blank'); };
+  detailSourceBtn.onclick=()=>{ window.open(it.url || SOSAC, '_blank'); };
+  detailDialog.showModal();
+  if(it.url){
+    try{
+      const data=await api('/api/detail?url='+encodeURIComponent(it.url));
+      if(data.description) detailDesc.textContent=data.description;
+      if(data.playUrl) playBtn.onclick=()=>window.open(data.playUrl,'_blank');
+    }catch(e){}
+  }
+}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); t.classList.add('active'); state.type=t.dataset.type; loadContent();});
+loadBtn.onclick=loadContent; searchBtn.onclick=loadContent; refreshBtn.onclick=loadContent; openWebBtn.onclick=()=>window.open(SOSAC,'_blank');
+settingsBtn.onclick=()=>{els.apiBase2.value=els.apiBase.value; settingsDialog.showModal();};
+saveSettings.onclick=()=>{els.apiBase.value=els.apiBase2.value.trim(); saveLocal(); settingsDialog.close(); toast('Uložené');};
+clearSettings.onclick=()=>{localStorage.clear(); loadLocal(); toast('Vymazané');};
+logo.onclick=()=>{ clearTimeout(state.logoTimer); state.logoClicks++; state.logoTimer=setTimeout(()=>state.logoClicks=0,1200); if(state.logoClicks>=5){state.logoClicks=0; settingsBtn.click();}};
+q.addEventListener('keydown',e=>{if(e.key==='Enter')loadContent()});
+loadLocal();
+</script>
 </body>
 </html>
