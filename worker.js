@@ -1,12 +1,16 @@
-// LechPlay Worker - dual login + episode/player extraction + proxy fallback
+// LechPlay Worker - series OK base + movies login fix
+// Seriály ostávajú podľa funkčného workeru.
+// Filmy používajú samostatný login: https://movies.sosac.tv/cs/ajax/user-login
 
 const SERIES_BASE = "https://tv.sosac.tv";
 const SERIES_HOME = "https://tv.sosac.tv/cs/";
+
 const MOVIES_BASE = "https://movies.sosac.tv";
 const MOVIES_HOME = "https://movies.sosac.tv/cs/";
 
 const SERIES_USERNAME = "Stenli78";
 const SERIES_PASSWORD = "Tinusha29";
+
 const MOVIES_USERNAME = "Stenli78";
 const MOVIES_PASSWORD = "Tinusha29";
 
@@ -22,6 +26,8 @@ export default {
           ok: true,
           name: "LechPlay API",
           endpoints: [
+            "/api/login-test?section=movies",
+            "/api/login-test?section=series",
             "/api/list?type=movies",
             "/api/list?type=series",
             "/api/search?section=movies&q=test",
@@ -30,6 +36,10 @@ export default {
             "/api/episodes?url=..."
           ]
         }));
+      }
+
+      if (url.pathname === "/api/login-test") {
+        return cors(json(await loginTest(url.searchParams.get("section") || "movies")));
       }
 
       if (url.pathname === "/api/list") {
@@ -64,8 +74,8 @@ export default {
     } catch (e) {
       return cors(json({
         error: true,
-        message: e?.message || String(e),
-        stack: e?.stack ? String(e.stack).slice(0, 900) : ""
+        message: e && e.message ? e.message : String(e),
+        stack: e && e.stack ? String(e.stack).slice(0, 900) : ""
       }, 500));
     }
   }
@@ -79,9 +89,26 @@ function required(url, key) {
 
 function getSource(type) {
   if (type === "series") {
-    return { type:"series", base:SERIES_BASE, home:SERIES_HOME, username:SERIES_USERNAME, password:SERIES_PASSWORD };
+    return {
+      type: "series",
+      base: SERIES_BASE,
+      home: SERIES_HOME,
+      login: SERIES_BASE + "/cs/ajax/user-login",
+      panel: SERIES_BASE + "/cs/ajax/get-logged-in-panel-only",
+      username: SERIES_USERNAME,
+      password: SERIES_PASSWORD
+    };
   }
-  return { type:"movies", base:MOVIES_BASE, home:MOVIES_HOME, username:MOVIES_USERNAME, password:MOVIES_PASSWORD };
+
+  return {
+    type: "movies",
+    base: MOVIES_BASE,
+    home: MOVIES_HOME,
+    login: MOVIES_BASE + "/cs/ajax/user-login",
+    panel: MOVIES_BASE + "/cs/ajax/get-logged-in-panel-only",
+    username: MOVIES_USERNAME,
+    password: MOVIES_PASSWORD
+  };
 }
 
 function sourceFromUrl(u) {
@@ -102,7 +129,7 @@ async function login(source) {
   body.set("password", source.password);
   body.set("remember", "0");
 
-  const loginRes = await fetch(source.base + "/cs/ajax/user-login", {
+  const loginRes = await fetch(source.login, {
     method: "POST",
     headers: {
       ...headers(cookie, source.home),
@@ -118,11 +145,12 @@ async function login(source) {
   cookie = mergeCookies(cookie, loginRes.headers.get("set-cookie") || "");
 
   try {
-    const panel = await fetch(source.base + "/cs/ajax/get-logged-in-panel-only", {
+    const panel = await fetch(source.panel, {
       headers: {
         ...headers(cookie, source.home),
         "accept": "*/*",
-        "x-requested-with": "XMLHttpRequest"
+        "x-requested-with": "XMLHttpRequest",
+        "referer": source.home
       },
       redirect: "manual"
     });
@@ -130,6 +158,22 @@ async function login(source) {
   } catch {}
 
   return cookie;
+}
+
+async function loginTest(section) {
+  const source = getSource(section);
+  const cookie = await login(source);
+  const html = await fetchText(source.home, cookie, source.home);
+
+  return {
+    ok: true,
+    section: source.type,
+    home: source.home,
+    loginUrl: source.login,
+    hasCookie: Boolean(cookie),
+    loggedIn: /Odhlásit|Odhlásiť|Profil|Vítejte|Vitajte|Stenli78/i.test(html),
+    cookiePreview: cookie ? cookie.split(";").slice(0, 4).join("; ") : ""
+  };
 }
 
 async function list(type) {
@@ -226,6 +270,7 @@ async function proxy(target, request) {
     body = await request.text();
     h["content-type"] = request.headers.get("content-type") || "application/x-www-form-urlencoded; charset=UTF-8";
     h["x-requested-with"] = "XMLHttpRequest";
+    h["origin"] = source.base;
   }
 
   const upstream = await fetch(safe, {
@@ -286,29 +331,72 @@ function headers(cookie, referer) {
 
 function parseItems(html, baseUrl, section) {
   const items = [];
+  const text = html || "";
+
+  // Filmy na movies.sosac.tv nepoužívajú /cs/detail/, ale hlavne /cs/player/.
+  // V hornom carouseli je v odkaze iba text "Shlédnout" a skutočný názov je až v nasledujúcom <h2>.
   const re = /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
   let m;
 
-  while ((m = re.exec(html || ""))) {
+  while ((m = re.exec(text))) {
     const url = absolute(m[1], baseUrl);
-    if (!url || !isAllowedHost(url) || !url.includes("/cs/detail/")) continue;
+    if (!url || !isAllowedHost(url)) continue;
+
+    const isSeriesDetail = section === "series" && url.includes("/cs/detail/");
+    const isMoviePlayer = section === "movies" && url.includes("/cs/player/");
+    const isMovieDetail = section === "movies" && url.includes("/cs/detail/") && !url.endsWith("/cs/detail/");
+    if (!isSeriesDetail && !isMoviePlayer && !isMovieDetail) continue;
 
     const raw = m[2] || "";
-    const title =
+    const after = text.slice(re.lastIndex, re.lastIndex + 1800);
+    const around = raw + after;
+
+    let title =
       attr(raw, /alt=["']([^"']+)["']/i) ||
       attr(raw, /title=["']([^"']+)["']/i) ||
       clean(raw);
 
-    const image =
-      firstUrl(raw, baseUrl, /<img[^>]+src=["']([^"']+)["']/i) ||
-      firstUrl(raw, baseUrl, /data-src=["']([^"']+)["']/i);
+    // Pri filme v carouseli je text odkazu len "Shlédnout".
+    if (!title || /^\d+$/.test(title) || /^(shl[eé]dnout|sledovat|sledovať|play|více zde|viac zde)$/i.test(title)) {
+      title =
+        first(after, /<h1[^>]*>([\s\S]*?)<\/h1>/i) ||
+        first(after, /<h2[^>]*>([\s\S]*?)<\/h2>/i) ||
+        first(after, /<h3[^>]*>([\s\S]*?)<\/h3>/i) ||
+        titleFromMovieUrl(url) ||
+        title;
+    }
 
+    const image =
+      firstUrl(around, baseUrl, /<img[^>]+(?:src|data-src)=["']([^"']+)["']/i) ||
+      firstUrl(around, baseUrl, /(?:background-image|background)\s*:\s*url\(["']?([^"')]+)["']?\)/i);
+
+    title = cleanMovieTitle(title);
     if (!title || title === "Titulky" || title === "close") continue;
+    if (/^(domů|filmy|tv|registrace|kontakt|spolupráce|kodi)$/i.test(title)) continue;
 
     items.push({ title, url, image, section });
   }
 
   return uniqueByUrl(items).slice(0, 160);
+}
+
+function cleanMovieTitle(title) {
+  return String(title || "")
+    .replace(/^\s*\d+\s+/, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function titleFromMovieUrl(url) {
+  try {
+    const slug = decodeURIComponent(new URL(url).pathname.split("/").filter(Boolean).pop() || "");
+    return slug
+      .replace(/-\d{4}$/g, m => " (" + m.slice(1) + ")")
+      .replace(/-/g, " ")
+      .replace(/\b\w/g, c => c.toUpperCase());
+  } catch {
+    return "";
+  }
 }
 
 function parseEpisodes(html, baseUrl) {
@@ -355,7 +443,11 @@ function parseWatchLinks(html, baseUrl) {
 
 function detailFromHtml(html, url) {
   return {
-    title: first(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i) || first(html, /<title[^>]*>([\s\S]*?)<\/title>/i),
+    title:
+      first(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i) ||
+      first(html, /<h2[^>]*>([\s\S]*?)<\/h2>/i) ||
+      first(html, /<h3[^>]*>([\s\S]*?)<\/h3>/i) ||
+      first(html, /<title[^>]*>([\s\S]*?)<\/title>/i),
     description:
       first(html, /<meta[^>]+name=["']description["'][^>]+content=["']([^"']+)/i) ||
       first(html, /<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']+)/i),
@@ -398,18 +490,26 @@ function rewriteHtml(html, pageUrl) {
     return attr + '="' + prox(u) + '"';
   });
 
+  const originalPage = JSON.stringify(pageUrl);
   const shim = `
 <script>
 (function(){
-  function p(u){ try { return '/proxy?url=' + encodeURIComponent(new URL(u, location.href).href); } catch(e){ return u; } }
+  var ORIGINAL_PAGE = ${originalPage};
+  function p(u){
+    try {
+      if (!u || String(u).startsWith('data:') || String(u).startsWith('javascript:') || String(u).startsWith('#')) return u;
+      return '/proxy?url=' + encodeURIComponent(new URL(u, ORIGINAL_PAGE).href);
+    } catch(e){ return u; }
+  }
   var of = window.fetch;
-  if (of) window.fetch = function(u,o){ return of(p(u), o); };
+  if (of) window.fetch = function(u,o){ return of(p(u), o || {}); };
   var oo = XMLHttpRequest.prototype.open;
   XMLHttpRequest.prototype.open = function(m,u){ return oo.call(this,m,p(u)); };
 })();
 </script>`;
 
-  body = body.replace(/<head([^>]*)>/i, '<head$1>' + shim);
+  if (/<head[^>]*>/i.test(body)) body = body.replace(/<head([^>]*)>/i, '<head$1>' + shim);
+  else body = shim + body;
   return body;
 }
 
