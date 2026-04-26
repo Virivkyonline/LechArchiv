@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#050816" />
+  <title>LechArchiv</title>
+  <style>
+    :root{
+      --bg:#050816;--card:#0b1224cc;--card2:#111a31;--text:#eef6ff;--muted:#91a2bd;--blue:#39b7ff;--blue2:#2368ff;--line:#24304a;--danger:#ff5b6b;--ok:#42d392;
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden}
+    body:before{content:"";position:fixed;inset:-30%;background:radial-gradient(circle at 25% 12%,#1b82ff55,transparent 28%),radial-gradient(circle at 82% 22%,#00e5ff33,transparent 25%),radial-gradient(circle at 50% 100%,#173064,transparent 35%);filter:blur(4px);z-index:0}
+    .app{position:relative;z-index:1;height:100%;display:flex;flex-direction:column}
+    header{height:78px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,#071126ee,#071126bb);border-bottom:1px solid #1f2d47;backdrop-filter:blur(18px)}
+    .brand{display:flex;align-items:center;gap:14px;min-width:0}
+    .logo{width:54px;height:54px;border-radius:18px;background:linear-gradient(135deg,#56d6ff,#2467ff);display:grid;place-items:center;box-shadow:0 12px 35px #258cff44;border:1px solid #7edfff66;cursor:pointer;user-select:none;font-size:30px;font-weight:900;color:white}
+    .title{line-height:1.05;min-width:0}.title b{display:block;font-size:24px;letter-spacing:-.5px;white-space:nowrap}.title span{display:block;margin-top:5px;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .actions{display:flex;gap:10px}.iconbtn{border:1px solid #2b3b5c;background:#121b30d9;color:var(--text);border-radius:16px;height:48px;min-width:48px;padding:0 15px;font-size:18px;font-weight:800;cursor:pointer;box-shadow:0 10px 30px #0005}.iconbtn:hover,.iconbtn:focus{outline:2px solid #4fc3ff66}
+    main{flex:1;min-height:0;position:relative}
+    .home{height:100%;overflow:auto;padding:42px 18px 80px;display:flex;justify-content:center}.wrap{width:min(920px,100%)}
+    .hero{border:1px solid #26344f;background:linear-gradient(180deg,#101a32dd,#081022dd);border-radius:34px;padding:38px;box-shadow:0 30px 80px #0008}.hero h1{margin:0;font-size:clamp(42px,8vw,76px);letter-spacing:-2.5px;line-height:.95}.hero h1 span{color:#9be5ff}.hero p{font-size:clamp(18px,3.5vw,26px);line-height:1.45;color:#a8b5ca;max-width:680px;margin:22px 0 30px}.buttons{display:flex;gap:14px;flex-wrap:wrap}.btn{border:0;border-radius:20px;padding:17px 24px;font-size:18px;font-weight:900;color:white;background:linear-gradient(135deg,var(--blue),var(--blue2));box-shadow:0 16px 44px #257cff55;cursor:pointer}.btn.secondary{background:#172137;border:1px solid #324260;box-shadow:none}.btn:hover,.btn:focus{outline:3px solid #53c8ff55}
+    .info{margin-top:22px;border:1px solid #22314f;background:#081022bb;border-radius:28px;padding:26px;color:#aebbd0;font-size:18px;line-height:1.55}.info b{color:#eff7ff}
+    .viewer{display:none;position:absolute;inset:0;background:#000}.viewer.active{display:block}.webbar{height:58px;display:flex;align-items:center;gap:8px;padding:8px 10px;background:#071126;border-bottom:1px solid #1b2942}.webbar .url{flex:1;min-width:0;padding:11px 13px;border-radius:14px;background:#0d172b;color:#9fb0c7;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:1px solid #253552}.webframe{width:100%;height:calc(100% - 58px);border:0;background:#fff}.fullscreen .webbar{display:none}.fullscreen .webframe{height:100%}
+    dialog{border:1px solid #314466;border-radius:28px;background:#091225;color:var(--text);width:min(480px,calc(100% - 28px));padding:0;box-shadow:0 30px 100px #000b}dialog::backdrop{background:#0009;backdrop-filter:blur(5px)}.modal{padding:25px}.modal h2{margin:0 0 8px;font-size:28px}.modal p{margin:0 0 20px;color:var(--muted);line-height:1.45}.field{margin:14px 0}.field label{display:block;color:#b9c5d6;margin-bottom:7px;font-weight:800}.field input{width:100%;font-size:18px;color:var(--text);background:#0f1a31;border:1px solid #2d3e60;border-radius:16px;padding:14px 15px;outline:none}.field input:focus{border-color:#4fc3ff;box-shadow:0 0 0 3px #4fc3ff22}.modalActions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}.small{font-size:13px;color:#7f91ad}.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(80px);background:#101a31;border:1px solid #30415f;color:var(--text);border-radius:999px;padding:12px 18px;z-index:20;box-shadow:0 20px 50px #0008;opacity:0;transition:.25s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    @media(max-width:520px){header{height:70px}.logo{width:48px;height:48px;border-radius:16px}.title b{font-size:20px}.home{padding-top:28px}.hero{padding:28px 24px;border-radius:28px}.btn{width:100%}.webbar{height:54px}.webframe{height:calc(100% - 54px)}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div id="logo" class="logo" title="LechArchiv">L</div>
+        <div class="title"><b>LechArchiv</b><span>Sosáč moderný klient</span></div>
+      </div>
+      <div class="actions">
+        <button id="homeBtn" class="iconbtn" title="Domov">⌂</button>
+        <button id="refreshBtn" class="iconbtn" title="Obnoviť">↻</button>
+      </div>
+    </header>
+    <main>
+      <section id="home" class="home">
+        <div class="wrap">
+          <div class="hero">
+            <h1>Lech<span>Archiv</span></h1>
+            <p>Moderné čisté rozhranie pre otvorenie tvojho zaplateného účtu na tv.sosac.tv. Prihlásenie si stránka zapamätá cez cookies.</p>
+            <div class="buttons">
+              <button id="openBtn" class="btn">Otvoriť Sosáč</button>
+              <button id="loginBtn" class="btn secondary">Prihlásenie</button>
+            </div>
+          </div>
+          <div class="info">
+            <b>Ovládanie:</b> otvor Sosáč, prihlás sa raz a nechaj zapnuté zapamätanie prihlásenia. Logo vľavo hore slúži aj ako skratka k prihlasovaciemu menu po piatich klikoch.
+          </div>
+        </div>
+      </section>
+      <section id="viewer" class="viewer">
+        <div id="webbar" class="webbar">
+          <button id="backBtn" class="iconbtn" title="Späť">‹</button>
+          <button id="forwardBtn" class="iconbtn" title="Dopredu">›</button>
+          <div id="urlText" class="url">https://tv.sosac.tv/cs/</div>
+          <button id="fullBtn" class="iconbtn" title="Fullscreen">⛶</button>
+        </div>
+        <iframe id="webframe" class="webframe" src="about:blank" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="loginDialog">
+    <form method="dialog" class="modal" id="loginForm">
+      <h2>Prihlásenie</h2>
+      <p>Údaje sa ukladajú iba lokálne v tomto zariadení. Web Sosáč sa otvorí v okne a cookies ostanú zapamätané.</p>
+      <div class="field"><label for="username">Meno</label><input id="username" autocomplete="username" placeholder="Používateľské meno" /></div>
+      <div class="field"><label for="password">Heslo</label><input id="password" type="password" autocomplete="current-password" placeholder="Heslo" /></div>
+      <div class="small">Poznámka: čistý web cez GitHub nevie bezpečne automaticky odoslať login na cudziu stránku. V Capacitor APK potom vieme doplniť lepšiu prácu s WebView/cookies.</div>
+      <div class="modalActions">
+        <button type="button" class="btn secondary" id="clearBtn">Vymazať</button>
+        <button type="button" class="btn secondary" id="closeLoginBtn">Zavrieť</button>
+        <button class="btn" value="save">Uložiť</button>
+      </div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const SOSAC_URL = 'https://tv.sosac.tv/cs/';
+    const LOGIN_URL = 'https://tv.sosac.tv/cs/login';
+    const $ = (id) => document.getElementById(id);
+    const home = $('home'), viewer = $('viewer'), frame = $('webframe'), urlText = $('urlText'), loginDialog = $('loginDialog');
+    let logoClicks = 0, logoTimer = null, historyStack = [], currentUrl = SOSAC_URL;
+    function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+    function saveLogin(){localStorage.setItem('lech_username',$('username').value.trim());localStorage.setItem('lech_password',$('password').value);toast('Uložené');}
+    function loadLogin(){ $('username').value=localStorage.getItem('lech_username')||''; $('password').value=localStorage.getItem('lech_password')||''; }
+    function clearLogin(){localStorage.removeItem('lech_username');localStorage.removeItem('lech_password');$('username').value='';$('password').value='';toast('Vymazané');}
+    function openLogin(){loadLogin();loginDialog.showModal();setTimeout(()=>$('username').focus(),120)}
+    function openWeb(url=SOSAC_URL){currentUrl=url;urlText.textContent=url;home.style.display='none';viewer.classList.add('active');if(frame.src==='about:blank'||frame.src!==url){frame.src=url;}historyStack.push(url)}
+    function goHome(){viewer.classList.remove('active');home.style.display='flex';document.body.classList.remove('fullscreen')}
+    $('openBtn').onclick=()=>openWeb(SOSAC_URL);
+    $('loginBtn').onclick=()=>openLogin();
+    $('homeBtn').onclick=()=>goHome();
+    $('refreshBtn').onclick=()=>{ if(viewer.classList.contains('active')) frame.src = frame.src; else location.reload(); };
+    $('backBtn').onclick=()=>{ try{ frame.contentWindow.history.back(); }catch(e){ frame.src=SOSAC_URL; } };
+    $('forwardBtn').onclick=()=>{ try{ frame.contentWindow.history.forward(); }catch(e){} };
+    $('fullBtn').onclick=()=>document.body.classList.toggle('fullscreen');
+    $('closeLoginBtn').onclick=()=>loginDialog.close();
+    $('clearBtn').onclick=()=>clearLogin();
+    $('loginForm').addEventListener('submit', e=>{e.preventDefault();saveLogin();loginDialog.close();openWeb(LOGIN_URL);});
+    $('logo').onclick=()=>{logoClicks++;clearTimeout(logoTimer);logoTimer=setTimeout(()=>logoClicks=0,1200);if(logoClicks>=5){logoClicks=0;openLogin();}};
+    window.addEventListener('keydown', e=>{if(e.key==='Escape'&&viewer.classList.contains('active')) goHome(); if(e.key==='F11'){e.preventDefault();document.body.classList.toggle('fullscreen')}});
+    frame.addEventListener('load',()=>{try{urlText.textContent=frame.contentWindow.location.href}catch(e){urlText.textContent=currentUrl}});
+    loadLogin();
+  </script>
+</body>
+</html>
